@@ -6,7 +6,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-  <title>Document</title>
+  <title>React tutorial</title>
 </head>
 <body>
   
@@ -20,12 +20,47 @@
         name: 'Ryu',
         age: 30
       }
+
+      handleClick = (e) => {
+        // if we don't use arrow functions we're going to
+        // get errors
+        this.setState({
+          name: 'Yoshi'
+        });
+        console.log(this.state);
+      }
+
+      handleMouseOver(e) {
+        console.log(e);
+      }
+      handleCopy(e) {
+        console.log('Try be original for once');
+      }
+
+      handleChange = (e) => {
+        this.setState({
+          name: e.target.value
+        });
+      }
+
+      handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('form submitted', this.state.name);
+      } 
       render() {
         // this is JSX format 
         return (
           <div className="app-content">
             <h1>Hey, ninjas</h1>
             <p>My name is: { this.state.name } and I am { this.state.age }</p>
+            <button onClick={this.handleClick}>Click Me</button>
+            <button onMouseOver={this.handleMouseOver}>Hover Me</button>
+            <p onCopy={this.handleCopy}> What we think, we become</p>
+            <form onSubmit={this.handleSubmit}>
+              <input type="text" onChange={this.handleChange} />
+              <button>Submit</button>
+
+            </form>
           </div>
         )
       }
