@@ -202,7 +202,7 @@ Use classes to create     Use functions to create
 
 24. React life cycle hooks:
   check the picture for lifecycle hook function:
-  these lifecycle hooks are just functions forexample
+  these lifecycle hooks are just functions for example
   render() function is lifecycle hook
   another examples:
 
@@ -217,3 +217,83 @@ Use classes to create     Use functions to create
 [ATTENTION]
 component mount lifecycle hook is a good place for getting 
 data from database
+
+
+25. To use react router we should install react-router-dom:
+        npm install react-router-dom
+    Then you have to import them in App.js:
+        import {BrowserRouter, Route} from 'react-router-dom';
+    Then you have to add your components:
+        <BrowserRouter>
+          <div className="App">
+            <Navbar />
+            <Route exact path="/" component={Home}></Route>
+            <Route path="/about" component={About}></Route>
+            <Route path="/contact" component={Contact}></Route>
+          </div>
+        </BrowserRouter>
+
+[ATTENTION]
+  path="/" means everything that is subset of / so we have to
+  add exact prop to remove this default behavior 
+
+[ATTENTION]
+  this way of routing request to server every time for index,
+  and it is not single page
+
+26. We can import Link or NavLink
+          import {Link, NavLink} from 'react-router-dom';
+and use them instead of <a> tag to not request to server:
+          <li><Link to="/">Home</Link></li>
+
+There is different between Link and NavLink, NavLink add 
+  active class to the active element.
+
+[ATTENTION]
+27. When we add a component to the Route tag:
+  <BrowserRouter>
+    <Route exact path="/" component={Home}>
+    </Route>
+  </BrowserRouter>
+
+The react router automatically add some objects to the props
+of that component:[history, location and match object]
+  and we can use these properties and functions for example:
+
+    we can use props.history.push("/about"); to go to another
+    URL.
+
+28. These additional objects only added to the components That
+  used in <Route> but if we want to have these objects in 
+  other components we can use one of react router higher order
+  components: (withRouter) this is function
+
+  first we have to import it:
+    import {withRouter} from 'react-router-dom'
+  then wrap the export object in it:
+    export default withRouter(Navbar);
+
+29. Higher Order components:
+      higher order components are just functions that gives
+      additional features to that component, and in the end
+      wrap the component in the export defaul:
+        (They are just like Vue directives)
+
+import React from 'react';
+const Rainbow = (WrappedComponent) => {
+  const colours = ['red', 'pink', 'orange', 'blue', 'green'];
+  const randomColour = colours[Math.floor(Math.random() * 5)];
+  const className = randomColour + '-text';
+  return (props) => {
+    return (
+      <div className={className}>
+        <WrappedComponent {...props}/>
+      </div>
+    )
+  } 
+}
+
+export default Rainbow;
+
+
+
