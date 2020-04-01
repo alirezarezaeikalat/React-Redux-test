@@ -261,7 +261,7 @@ of that component:[history, location and match object]
   and we can use these properties and functions for example:
 
     we can use props.history.push("/about"); to go to another
-    URL.
+    URL. (Programatic redirect)
 
 28. These additional objects only added to the components That
   used in <Route> but if we want to have these objects in 
@@ -292,8 +292,151 @@ const Rainbow = (WrappedComponent) => {
     )
   } 
 }
-
 export default Rainbow;
 
+30. We can use axios to get data from database in the 
+componentDidMount life cycle and save it in state of that 
+component then show it. install axios first and import it
 
 
+31. we can use Route param in this way:
+
+    <Route path="/:id"></Route>
+  
+  To get the route param we can use:
+    this.props.match.params.id 
+
+32. There is problem in this way, for example if you load data from param
+  this url /5 is also match with /contact and if get the data sooner than
+  showing the /contact page, the react will show both of them to combat This
+  problem we can use Switch tag: The swtich tag use routes in order
+
+    import {Switch} from 'react-router-dom';
+
+  then:
+    <BrowserRouter>
+      <Switch>
+          <Route exact path="/" component={Home}></Route>
+          <Route path="/about" component={About}></Route>
+          <Route path="/contact" component={Contact}></Route>
+          <Route path="/:id" component={Post}></Route>
+        </Switch>
+    </BrowserRouter>
+///////////////////////////////
+33. Using Redux: 
+  we can make actions and dispatch them in components
+  then store will run the reducer for that action,
+
+    const { createStore } = Redux;
+    const initState = {
+      todos: [],
+      posts: []
+    }
+    // when we pass myreducer to store, we don't have 
+    //store, so we have to make initial one for the store.
+    function myreducer(state = initState, action) {
+      if (action.type === 'ADD_TODO') {
+        return {    /// this object is new state
+          ...state,
+          todos: [...state.todos, action.todo]
+        }
+      if (action.type === 'ADD_POST') {
+        return {    /// this object is new state
+          ...state,
+          posts: [...state.posts, action.post]
+        }
+      }
+    }
+    const store = createStore(myreducer);
+    // everytime the store is change this function is
+      going to run
+    store.subscribe(() => {
+      console.log('store is updated')
+      console.log(store.getState())
+    })
+    const todoAction = {
+      type: 'ADD_TODO',
+      todo: 'buy milk'    // this is optional payload
+    }
+    
+    store.dispatch(todoAction);
+    store.dispatch({type: 'ADD_POST', post: 'this is nonsense'});
+    
+
+33. Using Redux in react app:
+    first you have to install redux and react-redux:
+    react-redux allow us to connect store to react components
+      
+      npm install redux react-redux
+
+    b. then you have to import createStore from redux in
+    Index.js file and Provider from react-redux:
+
+      import {createStore} from 'redux;
+      import {Provider} from 'react-redux'
+      import rootReducer from './reducers/rootReducer';
+      
+      const store = createStore(rootReducer);
+      ReactDOM.render(
+        <React.StrictMode>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </React.StrictMode>,
+        document.getElementById('root')
+      );
+
+      c. Then you have to create reducer for the store
+      and import it Index.js and give it to createStore
+
+        const initState = {
+          posts: []
+        };
+        const rootReducer = (state = initState, action) => {
+          return state;
+        };
+export default rootReducer;      
+
+[ATTENTION]
+34. you can make multiple reducers and combine them in
+one function in the end.
+
+35. After setting up redux we have to connect components to store:
+
+  in order to do this, we have to map parts that we want to from
+  store to component props, for doing this we have to import
+  connect from reac-redux: 
+
+      import {connect} from 'react-redux';
+
+  connect is a function that returns high order function,
+  connect as a input take another function to specify which 
+  data of store we want, so we have to define this function. 
+  in the return object we define the data that we want:
+
+      const mapStateToProps = (state, ownProps) => {
+        return {
+          posts: state.posts
+        }
+      }
+      /// ownProps is the props of component before attaching
+          data to it 
+
+  in the end you have to use the higher order function that 
+  connect return to add this props to the component:
+
+      export default connect(mapStateToProps)(Home) 
+
+[ATTENTION]
+36. how to map dispatch to props:
+
+  const mapDispatchToProps = (dispatch) => {
+    return {    // this object will be add to props
+      deletePost: (id) => { dispatch({
+        type: 'DELETE_POST',
+        id: id
+      })}
+    }
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(POST)
